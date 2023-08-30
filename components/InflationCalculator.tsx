@@ -114,6 +114,46 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
     }
   };
 
+  const handleFromChange = (month: number, year: number) => {
+    setFromMonth(month);
+    setFromYear(year);
+
+    if (isAlreadyExplode.current) {
+      const result = calculateInflation(
+        inflationPerMonth,
+        {
+          month,
+          year,
+        },
+        {
+          month: toMonth,
+          year: toYear,
+        }
+      );
+      setResult(result);
+    }
+  };
+
+  const handleToChange = (month: number, year: number) => {
+    setToMonth(month);
+    setToYear(year);
+
+    if (isAlreadyExplode.current) {
+      const result = calculateInflation(
+        inflationPerMonth,
+        {
+          month: fromMonth,
+          year: fromYear,
+        },
+        {
+          month,
+          year,
+        }
+      );
+      setResult(result);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 w-full items-center">
       <form
@@ -121,50 +161,14 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
         onSubmit={handleSubmit}
       >
         <MonthYearSelector
-          onChange={(month, year) => {
-            setFromMonth(month);
-            setFromYear(year);
-
-            if (isAlreadyExplode.current) {
-              const result = calculateInflation(
-                inflationPerMonth,
-                {
-                  month,
-                  year,
-                },
-                {
-                  month: toMonth,
-                  year: toYear,
-                }
-              );
-              setResult(result);
-            }
-          }}
+          onChange={handleFromChange}
           defaultMonth={fromMonth}
           defaultYear={fromYear}
           availableYears={availableYears}
         />
 
         <MonthYearSelector
-          onChange={(month, year) => {
-            setToMonth(month);
-            setToYear(year);
-
-            if (isAlreadyExplode.current) {
-              const result = calculateInflation(
-                inflationPerMonth,
-                {
-                  month: fromMonth,
-                  year: fromYear,
-                },
-                {
-                  month,
-                  year,
-                }
-              );
-              setResult(result);
-            }
-          }}
+          onChange={handleToChange}
           defaultMonth={toMonth}
           defaultYear={toYear}
           availableYears={availableYears}
