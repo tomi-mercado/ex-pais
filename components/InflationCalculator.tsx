@@ -60,6 +60,8 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   inflationPerMonth,
   defaultValues,
 }) => {
+  console.log({ inflationPerMonth });
+
   const [result, setResult] = useState<number | null>(null);
   const [isExploding, setIsExploding] = useState(false);
 
