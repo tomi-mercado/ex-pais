@@ -2,7 +2,7 @@
 
 import { addZeroIfNecessary, generateKeyMonthYear } from "@/utils";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import MonthYearSelector from "./MonthYearSelector";
 
 interface InflationCalculatorProps {
@@ -63,36 +63,51 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   const [result, setResult] = useState<number | null>(null);
   const [isExploding, setIsExploding] = useState(false);
 
-  const [from, setFrom] = useState({
-    month: defaultValues?.from.month || 1,
-    year: defaultValues?.from.year || 2017,
-  });
+  const [fromMonth, setFromMonth] = useState(defaultValues?.from.month || 1);
+  const [fromYear, setFromYear] = useState(defaultValues?.from.year || 2017);
 
   const date = new Date();
   const currentMonth = date.getMonth() + 1;
   const currentYear = date.getFullYear();
 
-  const [to, setTo] = useState({
-    month: defaultValues?.to.month || currentMonth,
-    year: defaultValues?.to.year || currentYear,
-  });
+  const [toMonth, setToMonth] = useState(
+    defaultValues?.to.month || currentMonth
+  );
+  const [toYear, setToYear] = useState(defaultValues?.to.year || currentYear);
 
   let availableYears = Object.keys(inflationPerMonth).map((key) =>
     parseInt(key.split("-")[1])
   );
   availableYears = Array.from(new Set(availableYears)).sort((a, b) => a - b);
 
+  const isAlreadyExplode = useRef(false);
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     try {
-      const result = calculateInflation(inflationPerMonth, from, to);
+      const result = calculateInflation(
+        inflationPerMonth,
+        {
+          month: fromMonth,
+          year: fromYear,
+        },
+        {
+          month: toMonth,
+          year: toYear,
+        }
+      );
+
+      if (isAlreadyExplode.current) {
+        return;
+      }
 
       setIsExploding(true);
 
       setTimeout(() => {
         setIsExploding(false);
         setResult(result);
+        isAlreadyExplode.current = true;
       }, 1600);
     } catch (error) {
       console.error(error);
@@ -106,16 +121,52 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
         onSubmit={handleSubmit}
       >
         <MonthYearSelector
-          onChange={(month, year) => setFrom({ month, year })}
-          defaultMonth={from.month}
-          defaultYear={from.year}
+          onChange={(month, year) => {
+            setFromMonth(month);
+            setFromYear(year);
+
+            if (isAlreadyExplode.current) {
+              const result = calculateInflation(
+                inflationPerMonth,
+                {
+                  month,
+                  year,
+                },
+                {
+                  month: toMonth,
+                  year: toYear,
+                }
+              );
+              setResult(result);
+            }
+          }}
+          defaultMonth={fromMonth}
+          defaultYear={fromYear}
           availableYears={availableYears}
         />
 
         <MonthYearSelector
-          onChange={(month, year) => setTo({ month, year })}
-          defaultMonth={to.month}
-          defaultYear={to.year}
+          onChange={(month, year) => {
+            setToMonth(month);
+            setToYear(year);
+
+            if (isAlreadyExplode.current) {
+              const result = calculateInflation(
+                inflationPerMonth,
+                {
+                  month: fromMonth,
+                  year: fromYear,
+                },
+                {
+                  month,
+                  year,
+                }
+              );
+              setResult(result);
+            }
+          }}
+          defaultMonth={toMonth}
+          defaultYear={toYear}
           availableYears={availableYears}
         />
 
@@ -129,11 +180,11 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
           <p className="text-lg">
             La inflación acumulada entre{" "}
             <strong>
-              {addZeroIfNecessary(from.month)}/{from.year}
+              {addZeroIfNecessary(fromMonth)}/{fromYear}
             </strong>{" "}
             y{" "}
             <strong>
-              {addZeroIfNecessary(to.month)}/{to.year}
+              {addZeroIfNecessary(toMonth)}/{toYear}
             </strong>{" "}
             fue de
           </p>

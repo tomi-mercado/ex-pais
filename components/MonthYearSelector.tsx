@@ -24,13 +24,15 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   );
 
   const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(parseInt(event.target.value));
-    onChange(selectedMonth, selectedYear);
+    const newSelectedMonth = parseInt(event.target.value);
+    setSelectedMonth(newSelectedMonth);
+    onChange(newSelectedMonth, selectedYear);
   };
 
   const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(parseInt(event.target.value));
-    onChange(selectedMonth, selectedYear);
+    const newSelectedYear = parseInt(event.target.value);
+    setSelectedYear(newSelectedYear);
+    onChange(selectedMonth, newSelectedYear);
   };
 
   const defaultYears = Array.from(
