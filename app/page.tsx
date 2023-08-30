@@ -14,7 +14,7 @@ export default async function Home() {
   const lastYear = parseInt(lastMonthYear.split("-")[1]);
 
   return (
-    <div className="flex flex-col gap-6 text-center items-center">
+    <div className="flex flex-col gap-6 text-center items-center p-6 bg-base-100 rounded-md border-2 border-cyan-300">
       <div className="flex flex-col gap-2 text-center items-center">
         <h1 className="text-4xl">📉</h1>
         <h1 className="text-4xl">Ex País</h1>
