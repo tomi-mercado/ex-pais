@@ -82,12 +82,12 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   );
   availableYears = Array.from(new Set(availableYears)).sort((a, b) => a - b);
 
-  const monthsOfLastYear = Object.keys(inflationPerMonth)
-    .filter(
-      (key) =>
-        parseInt(key.split("-")[1]) ===
-        availableYears[availableYears.length - 1]
-    )
+  const monthsOfToYear = Object.keys(inflationPerMonth)
+    .filter((key) => parseInt(key.split("-")[1]) === toYear)
+    .map((key) => parseInt(key.split("-")[0]));
+
+  const monthsOfFromYear = Object.keys(inflationPerMonth)
+    .filter((key) => parseInt(key.split("-")[1]) === fromYear)
     .map((key) => parseInt(key.split("-")[0]));
 
   const isAlreadyExplode = useRef(false);
@@ -175,6 +175,7 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
           defaultMonth={fromMonth}
           defaultYear={fromYear}
           availableYears={availableYears}
+          availableMonths={monthsOfFromYear}
         />
 
         <MonthYearSelector
@@ -182,7 +183,7 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
           defaultMonth={toMonth}
           defaultYear={toYear}
           availableYears={availableYears}
-          availableMonths={monthsOfLastYear}
+          availableMonths={monthsOfToYear}
         />
 
         <button className="btn btn-primary" type="submit">
