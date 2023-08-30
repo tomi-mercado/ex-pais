@@ -26,8 +26,6 @@ const getInflationPerMonth = async () => {
     return acc;
   }, {} as Record<string, number>);
 
-  console.log({ inflationPerMonth });
-
   return inflationPerMonth;
 };
 
