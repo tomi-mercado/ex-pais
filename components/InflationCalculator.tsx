@@ -57,7 +57,7 @@ const calculateInflation = (
 };
 
 const getMonthsOfYear = (dates: string[], year: number) =>
-  Object.keys(dates)
+  dates
     .filter((key) => parseInt(key.split("-")[1]) === year)
     .map((key) => parseInt(key.split("-")[0]));
 
@@ -76,7 +76,7 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   const firstMonth = getMonthsOfYear(dates, firstYear)[0];
 
   const lastYear = availableYears[availableYears.length - 1];
-  const lastMonth = getMonthsOfYear(dates, lastYear)[0];
+  const lastMonth = getMonthsOfYear(dates, lastYear).at(-1) as number;
 
   const [result, setResult] = useState<number | null>(null);
   const [isExploding, setIsExploding] = useState(false);
