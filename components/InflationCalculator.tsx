@@ -208,19 +208,20 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
       ) : (
         <div className="relative h-32 w-32 flex items-center justify-center">
           {!isExploding && <p className="text-8xl">🇦🇷</p>}
-          {isExploding && (
-            <Image
-              priority
-              src="/explosion.gif"
-              alt="Explosion"
-              style={{
-                zIndex: 1,
-                width: "100%",
-                height: "100%",
-              }}
-              layout="fill"
-            />
-          )}
+
+          <Image
+            priority
+            src="/explosion.gif"
+            alt="Explosion"
+            style={{
+              zIndex: 1,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: isExploding ? "block" : "none",
+            }}
+            layout="fill"
+          />
         </div>
       )}
     </div>
