@@ -7,6 +7,7 @@ interface MonthYearSelectorProps {
   defaultMonth?: number;
   defaultYear?: number;
   availableYears?: number[];
+  availableMonths?: number[];
 }
 
 const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
@@ -14,6 +15,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   defaultMonth,
   defaultYear,
   availableYears,
+  availableMonths,
 }) => {
   const currentDate = new Date();
   const [selectedMonth, setSelectedMonth] = useState(
@@ -41,14 +43,17 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   );
   const years = availableYears || defaultYears;
 
+  const defaultMonths = Array.from({ length: 12 }, (_, index) => index + 1);
+  const months = availableMonths || defaultMonths;
+
   return (
-    <div className="flex space-x-2 w-fit">
+    <div className="grid grid-cols-[2fr,1fr] gap-2">
       <select
         className="select select-bordered"
         value={selectedMonth}
         onChange={handleMonthChange}
       >
-        {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => {
+        {months.map((month) => {
           let dateStr = new Date(0, month - 1).toLocaleString("es-ES", {
             month: "long",
           });

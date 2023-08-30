@@ -80,6 +80,14 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   );
   availableYears = Array.from(new Set(availableYears)).sort((a, b) => a - b);
 
+  const monthsOfLastYear = Object.keys(inflationPerMonth)
+    .filter(
+      (key) =>
+        parseInt(key.split("-")[1]) ===
+        availableYears[availableYears.length - 1]
+    )
+    .map((key) => parseInt(key.split("-")[0]));
+
   const isAlreadyExplode = useRef(false);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -172,6 +180,7 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
           defaultMonth={toMonth}
           defaultYear={toYear}
           availableYears={availableYears}
+          availableMonths={monthsOfLastYear}
         />
 
         <button className="btn btn-primary" type="submit">
