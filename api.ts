@@ -12,13 +12,13 @@ const getInflationPerMonth = async () => {
   const { data } = (await response.json()) as Response;
 
   const inflationPerMonth = data.reduce((acc, [dateStr, value]) => {
-    const date = new Date(dateStr);
+    const date = new Date(`${dateStr}:`);
 
     let month = date.getMonth();
     let year = date.getFullYear();
 
     year = month === 11 ? year + 1 : year;
-    month = month === 11 ? 1 : month + 2;
+    month = month === 11 ? 1 : month + 1;
 
     const key = generateKeyMonthYear(month, year);
 
