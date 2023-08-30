@@ -4,15 +4,6 @@ import InflationCalculator from "@/components/InflationCalculator";
 export default async function Home() {
   const inflationPerMonth = await api.inflationPerMonth.get();
 
-  const firstMonthYear = Object.keys(inflationPerMonth)[0];
-  const lastMonthYear = Object.keys(inflationPerMonth).at(-1) as string;
-
-  const firstMonth = parseInt(firstMonthYear.split("-")[0]);
-  const firstYear = parseInt(firstMonthYear.split("-")[1]);
-
-  const lastMonth = parseInt(lastMonthYear.split("-")[0]);
-  const lastYear = parseInt(lastMonthYear.split("-")[1]);
-
   return (
     <div className="flex flex-col gap-6 text-center items-center p-6 bg-base-100 rounded-md border-2 border-cyan-300">
       <div className="flex flex-col gap-2 text-center items-center">
@@ -23,19 +14,7 @@ export default async function Home() {
         </p>
       </div>
 
-      <InflationCalculator
-        inflationPerMonth={inflationPerMonth}
-        defaultValues={{
-          from: {
-            month: firstMonth,
-            year: firstYear,
-          },
-          to: {
-            month: lastMonth,
-            year: lastYear,
-          },
-        }}
-      />
+      <InflationCalculator inflationPerMonth={inflationPerMonth} />
     </div>
   );
 }

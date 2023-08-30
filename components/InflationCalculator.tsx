@@ -58,24 +58,24 @@ const calculateInflation = (
 
 const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   inflationPerMonth,
-  defaultValues,
 }) => {
-  console.log({ inflationPerMonth });
+  const firstMonthYear = Object.keys(inflationPerMonth)[0];
+  const lastMonthYear = Object.keys(inflationPerMonth).at(-1) as string;
+
+  const firstMonth = parseInt(firstMonthYear.split("-")[0]);
+  const firstYear = parseInt(firstMonthYear.split("-")[1]);
+
+  const lastMonth = parseInt(lastMonthYear.split("-")[0]);
+  const lastYear = parseInt(lastMonthYear.split("-")[1]);
 
   const [result, setResult] = useState<number | null>(null);
   const [isExploding, setIsExploding] = useState(false);
 
-  const [fromMonth, setFromMonth] = useState(defaultValues?.from.month || 1);
-  const [fromYear, setFromYear] = useState(defaultValues?.from.year || 2017);
+  const [fromMonth, setFromMonth] = useState(firstMonth);
+  const [fromYear, setFromYear] = useState(firstYear);
 
-  const date = new Date();
-  const currentMonth = date.getMonth() + 1;
-  const currentYear = date.getFullYear();
-
-  const [toMonth, setToMonth] = useState(
-    defaultValues?.to.month || currentMonth
-  );
-  const [toYear, setToYear] = useState(defaultValues?.to.year || currentYear);
+  const [toMonth, setToMonth] = useState(lastMonth);
+  const [toYear, setToYear] = useState(lastYear);
 
   let availableYears = Object.keys(inflationPerMonth).map((key) =>
     parseInt(key.split("-")[1])
