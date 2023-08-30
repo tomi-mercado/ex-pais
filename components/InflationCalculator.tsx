@@ -56,17 +56,27 @@ const calculateInflation = (
   );
 };
 
+const getMonthsOfYear = (dates: string[], year: number) =>
+  Object.keys(dates)
+    .filter((key) => parseInt(key.split("-")[1]) === year)
+    .map((key) => parseInt(key.split("-")[0]));
+
+const getAvailableYears = (dates: string[]) =>
+  Array.from(new Set(dates.map((date) => parseInt(date.split("-")[1])))).sort(
+    (a, b) => a - b
+  );
+
 const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   inflationPerMonth,
 }) => {
-  const firstMonthYear = Object.keys(inflationPerMonth)[0];
-  const lastMonthYear = Object.keys(inflationPerMonth).at(-1) as string;
+  const dates = Object.keys(inflationPerMonth);
+  const availableYears = getAvailableYears(dates);
 
-  const firstMonth = parseInt(firstMonthYear.split("-")[0]);
-  const firstYear = parseInt(firstMonthYear.split("-")[1]);
+  const firstYear = availableYears[0];
+  const firstMonth = getMonthsOfYear(dates, firstYear)[0];
 
-  const lastMonth = parseInt(lastMonthYear.split("-")[0]);
-  const lastYear = parseInt(lastMonthYear.split("-")[1]);
+  const lastYear = availableYears[availableYears.length - 1];
+  const lastMonth = getMonthsOfYear(dates, lastYear)[0];
 
   const [result, setResult] = useState<number | null>(null);
   const [isExploding, setIsExploding] = useState(false);
@@ -77,20 +87,13 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
   const [toMonth, setToMonth] = useState(lastMonth);
   const [toYear, setToYear] = useState(lastYear);
 
-  let availableYears = Object.keys(inflationPerMonth).map((key) =>
-    parseInt(key.split("-")[1])
-  );
-  availableYears = Array.from(new Set(availableYears)).sort((a, b) => a - b);
-
-  const monthsOfToYear = Object.keys(inflationPerMonth)
-    .filter((key) => parseInt(key.split("-")[1]) === toYear)
-    .map((key) => parseInt(key.split("-")[0]));
-
-  const monthsOfFromYear = Object.keys(inflationPerMonth)
-    .filter((key) => parseInt(key.split("-")[1]) === fromYear)
-    .map((key) => parseInt(key.split("-")[0]));
+  const fromYears = availableYears.filter((year) => year <= toYear);
+  const toYears = availableYears.filter((year) => year >= fromYear);
 
   const isAlreadyExplode = useRef(false);
+
+  const monthsOfToYear = getMonthsOfYear(dates, toYear);
+  const monthsOfFromYear = getMonthsOfYear(dates, fromYear);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -174,7 +177,7 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
           onChange={handleFromChange}
           defaultMonth={fromMonth}
           defaultYear={fromYear}
-          availableYears={availableYears}
+          availableYears={fromYears}
           availableMonths={monthsOfFromYear}
         />
 
@@ -182,7 +185,7 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
           onChange={handleToChange}
           defaultMonth={toMonth}
           defaultYear={toYear}
-          availableYears={availableYears}
+          availableYears={toYears}
           availableMonths={monthsOfToYear}
         />
 
