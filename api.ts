@@ -21,8 +21,6 @@ const getInflationPerMonth = async () => {
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
 
-    console.log({ dateStr, month, year });
-
     const key = generateKeyMonthYear(month, year);
 
     acc[key] = value;
