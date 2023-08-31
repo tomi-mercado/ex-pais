@@ -1,5 +1,6 @@
 import api from "@/api";
 import InflationCalculator from "@/components/InflationCalculator";
+import { InflationProvider } from "@/context";
 
 export default async function Home() {
   const inflationPerMonth = await api.inflationPerMonth.get();
@@ -14,7 +15,9 @@ export default async function Home() {
         </p>
       </div>
 
-      <InflationCalculator inflationPerMonth={inflationPerMonth} />
+      <InflationProvider inflationPerMonth={inflationPerMonth}>
+        <InflationCalculator inflationPerMonth={inflationPerMonth} />
+      </InflationProvider>
     </div>
   );
 }

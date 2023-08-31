@@ -1,24 +1,15 @@
+import { useInflation } from "@/context";
 import { addZeroIfNecessary } from "@/utils";
 import Image from "next/image";
 import React from "react";
 
 interface InflationResultProps {
-  result: number | null;
   isExploding: boolean;
-  fromMonth: number;
-  fromYear: number;
-  toMonth: number;
-  toYear: number;
 }
 
-const InflationResult: React.FC<InflationResultProps> = ({
-  fromYear,
-  fromMonth,
-  isExploding,
-  result,
-  toMonth,
-  toYear,
-}) => {
+const InflationResult: React.FC<InflationResultProps> = ({ isExploding }) => {
+  const { result, fromMonth, fromYear, toMonth, toYear } = useInflation();
+
   return (
     <>
       {!!result ? (
