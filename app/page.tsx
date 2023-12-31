@@ -26,13 +26,18 @@ export default async function Home() {
         <FaDatabase className="inline mr-1 mb-1" />
         <span>
           Los datos son provistos por{" "}
-          <a className="underline" href="https://datos.gob.ar/dataset">
+          <a
+            className="underline"
+            href="https://datos.gob.ar/dataset"
+            target="_blank"
+          >
             Datos Argentina
           </a>
           , y el cálculo se realiza a partir del{" "}
           <a
             className="underline"
             href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
+            target="_blank"
           >
             IPC
           </a>
