@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -23,9 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="lofi">
       <body
-        className={`${inter.className} bg-base-300 min-h-screen flex justify-center items-center p-6 relative`}
+        className={`${inter.className} bg-base-300 min-h-screen flex flex-col justify-center items-center relative`}
       >
         {children}
+        <Footer />
       </body>
     </html>
   );
