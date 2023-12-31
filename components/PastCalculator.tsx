@@ -5,14 +5,20 @@ const calculateNewPrice = (oldPrice: number, inflation: number) => {
   const percentage = inflation / 100;
   const newPrice = (percentage + 1) * oldPrice;
 
-  return newPrice.toFixed(2);
+  return Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+  }).format(newPrice);
 };
 
 const calculateOldPrice = (newPrice: number, inflation: number) => {
   const percentage = inflation / 100;
   const oldPrice = newPrice / (percentage + 1);
 
-  return oldPrice.toFixed(2);
+  return Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+  }).format(oldPrice);
 };
 
 const InputWithDollarSign: React.FC<{
@@ -107,7 +113,7 @@ const PastCalculator: React.FC = () => {
                   {!prices.from ? (
                     "..."
                   ) : (
-                    <strong>{` $${calculateNewPrice(
+                    <strong>{` ${calculateNewPrice(
                       prices.from,
                       result
                     )}`}</strong>
@@ -134,7 +140,7 @@ const PastCalculator: React.FC = () => {
                   {!prices.actual ? (
                     "..."
                   ) : (
-                    <strong>{` $${calculateOldPrice(
+                    <strong>{` ${calculateOldPrice(
                       prices.actual,
                       result
                     )}`}</strong>
