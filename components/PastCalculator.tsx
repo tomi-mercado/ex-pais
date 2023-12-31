@@ -19,7 +19,8 @@ const InputWithDollarSign: React.FC<{
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
-}> = ({ onChange, placeholder, name }) => {
+  value: number | null;
+}> = ({ onChange, placeholder, name, value }) => {
   return (
     <div className="relative w-full">
       <div className="absolute top-0 left-0 h-full w-8 flex items-center justify-center bg-slate-400">
@@ -31,6 +32,7 @@ const InputWithDollarSign: React.FC<{
         className="input input-bordered w-full max-w-xs pl-9"
         name={name}
         onChange={onChange}
+        value={value || ""}
       />
     </div>
   );
@@ -82,6 +84,7 @@ const PastCalculator: React.FC = () => {
             placeholder={`Escribe un precio de ${fromMonth}/${fromYear}`}
             onChange={handleChange}
             name="from"
+            value={prices.from}
           />
           {
             <p className="w-full">
@@ -103,6 +106,7 @@ const PastCalculator: React.FC = () => {
             placeholder="Escribe un precio actual"
             onChange={handleChange}
             name="actual"
+            value={prices.actual}
           />
           {
             <p className="w-full">
