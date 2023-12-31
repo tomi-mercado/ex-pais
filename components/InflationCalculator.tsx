@@ -4,6 +4,7 @@ import { useInflation } from "@/context";
 import React, { useRef, useState } from "react";
 import InflationResult from "./InflationResult";
 import MonthYearSelector from "./MonthYearSelector";
+import PastCalculator from "./PastCalculator";
 
 interface InflationCalculatorProps {
   defaultValues?: {
@@ -31,6 +32,7 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
     fromYear,
     toMonth,
     toYear,
+    result,
     setFromMonth,
     setFromYear,
     setToMonth,
@@ -143,6 +145,8 @@ const InflationCalculator: React.FC<InflationCalculatorProps> = ({
       </form>
 
       <InflationResult isExploding={isExploding} />
+
+      {!isExploding && <PastCalculator />}
     </div>
   );
 };

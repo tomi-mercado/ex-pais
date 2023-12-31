@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="lofi">
       <body
-        className={`${inter.className} bg-base-300 min-h-screen flex justify-center items-center p-6`}
+        className={`${inter.className} bg-base-300 min-h-screen flex justify-center items-center p-6 relative`}
       >
         {children}
       </body>
