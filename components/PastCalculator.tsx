@@ -79,11 +79,13 @@ const PastCalculator: React.FC = () => {
     <div
       tabIndex={0}
       className={`collapse collapse-arrow border border-base-300 bg-base-200 cursor-pointer collapse-${collapseState}`}
-      onClick={() =>
-        setCollapseState(collapseState === "open" ? "close" : "open")
-      }
     >
-      <div className="collapse-title font-medium text-left">
+      <div
+        className="collapse-title font-medium text-left"
+        onClick={() => {
+          setCollapseState(collapseState === "open" ? "close" : "open");
+        }}
+      >
         ¿Querés deprimirte un poco más? 👇
       </div>
       <div className="collapse-content">
