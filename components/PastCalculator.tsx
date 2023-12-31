@@ -46,6 +46,8 @@ const PastCalculator: React.FC = () => {
     actual: null,
   });
 
+  const [collapseState, setCollapseState] = useState("close");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -74,51 +76,74 @@ const PastCalculator: React.FC = () => {
   }
 
   return (
-    <form className="w-full">
-      <label className="form-control w-full">
-        <div className="label">
-          <span className="label-text">Algo que estaba...</span>
-        </div>
-        <div className="w-full flex items-center gap-2">
-          <InputWithDollarSign
-            placeholder={`Escribe un precio de ${fromMonth}/${fromYear}`}
-            onChange={handleChange}
-            name="from"
-            value={prices.from}
-          />
-          {
-            <p className="w-full">
-              Hoy está
-              {!prices.from
-                ? "..."
-                : ` $${calculateNewPrice(prices.from, result)}`}
-            </p>
-          }
-        </div>
-      </label>
+    <div
+      tabIndex={0}
+      className={`collapse collapse-arrow border border-base-300 bg-base-200 cursor-pointer collapse-${collapseState}`}
+      onClick={() =>
+        setCollapseState(collapseState === "open" ? "close" : "open")
+      }
+    >
+      <div className="collapse-title font-medium text-left">
+        ¿Querés deprimirte un poco más? 👇
+      </div>
+      <div className="collapse-content">
+        <form className="w-full">
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text">Algo que estaba...</span>
+            </div>
+            <div className="w-full flex items-center gap-2">
+              <InputWithDollarSign
+                placeholder={`Escribe un precio de ${fromMonth}/${fromYear}`}
+                onChange={handleChange}
+                name="from"
+                value={prices.from}
+              />
+              {
+                <p className="w-full">
+                  Hoy está
+                  {!prices.from ? (
+                    "..."
+                  ) : (
+                    <strong>{` $${calculateNewPrice(
+                      prices.from,
+                      result
+                    )}`}</strong>
+                  )}
+                </p>
+              }
+            </div>
+          </label>
 
-      <label className="form-control w-full">
-        <div className="label">
-          <span className="label-text">Algo que hoy está...</span>
-        </div>
-        <div className="w-full flex items-center gap-2">
-          <InputWithDollarSign
-            placeholder="Escribe un precio actual"
-            onChange={handleChange}
-            name="actual"
-            value={prices.actual}
-          />
-          {
-            <p className="w-full">
-              En {fromMonth}/{fromYear} estaba
-              {!prices.actual
-                ? "..."
-                : ` $${calculateOldPrice(prices.actual, result)}`}
-            </p>
-          }
-        </div>
-      </label>
-    </form>
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text">Algo que hoy está...</span>
+            </div>
+            <div className="w-full flex items-center gap-2">
+              <InputWithDollarSign
+                placeholder="Escribe un precio actual"
+                onChange={handleChange}
+                name="actual"
+                value={prices.actual}
+              />
+              {
+                <p className="w-full">
+                  En {fromMonth}/{fromYear} estaba
+                  {!prices.actual ? (
+                    "..."
+                  ) : (
+                    <strong>{` $${calculateOldPrice(
+                      prices.actual,
+                      result
+                    )}`}</strong>
+                  )}
+                </p>
+              }
+            </div>
+          </label>
+        </form>
+      </div>
+    </div>
   );
 };
 
