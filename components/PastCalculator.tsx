@@ -1,4 +1,5 @@
 import { useInflation } from "@/context";
+import { addZeroIfNecessary } from "@/utils";
 import React, { useState } from "react";
 
 const calculateNewPrice = (oldPrice: number, inflation: number) => {
@@ -29,7 +30,7 @@ const InputWithDollarSign: React.FC<{
 }> = ({ onChange, placeholder, name, value }) => {
   return (
     <div className="relative w-full">
-      <div className="absolute top-0 left-0 h-full w-8 flex items-center justify-center bg-slate-400">
+      <div className="absolute top-0 left-0 h-full w-8 flex items-center justify-center bg-slate-300">
         $
       </div>
       <input
@@ -102,7 +103,9 @@ const PastCalculator: React.FC = () => {
             </div>
             <div className="w-full flex items-center gap-2">
               <InputWithDollarSign
-                placeholder={`Escribe un precio de ${fromMonth}/${fromYear}`}
+                placeholder={`Escribe un precio de ${addZeroIfNecessary(
+                  fromMonth
+                )}/${fromYear}`}
                 onChange={handleChange}
                 name="from"
                 value={prices.from}
@@ -136,7 +139,7 @@ const PastCalculator: React.FC = () => {
               />
               {
                 <p className="w-full">
-                  En {fromMonth}/{fromYear} estaba
+                  En {addZeroIfNecessary(fromMonth)}/{fromYear} estaba
                   {!prices.actual ? (
                     "..."
                   ) : (

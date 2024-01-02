@@ -18,7 +18,7 @@ export default async function Home() {
         </div>
 
         <InflationProvider inflationPerMonth={inflationPerMonth}>
-          <InflationCalculator inflationPerMonth={inflationPerMonth} />
+          <InflationCalculator />
         </InflationProvider>
       </div>
 

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState } from "react";
 import { generateKeyMonthYear } from "./utils";
 
 interface InflationContextData {
+  inflationPerMonth: Record<string, number>;
   monthsOfFromYear: number[];
   monthsOfToYear: number[];
   fromYears: number[];
@@ -109,6 +110,7 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
   const monthsOfFromYear = getMonthsOfYear(dates, fromYear);
 
   const contextValue: InflationContextData = {
+    inflationPerMonth,
     monthsOfFromYear,
     monthsOfToYear,
     fromYears,

@@ -1,5 +1,4 @@
 import { useInflation } from "@/context";
-import { addZeroIfNecessary } from "@/utils";
 import Image from "next/image";
 import React from "react";
 
@@ -8,23 +7,13 @@ interface InflationResultProps {
 }
 
 const InflationResult: React.FC<InflationResultProps> = ({ isExploding }) => {
-  const { result, fromMonth, fromYear, toMonth, toYear } = useInflation();
+  const { result } = useInflation();
 
   return (
     <>
       {!!result ? (
         <div className="flex flex-col gap-1 h-32 text-center items-center">
-          <p className="text-lg">
-            La inflación acumulada entre{" "}
-            <strong>
-              {addZeroIfNecessary(fromMonth)}/{fromYear}
-            </strong>{" "}
-            y{" "}
-            <strong>
-              {addZeroIfNecessary(toMonth)}/{toYear}
-            </strong>{" "}
-            fue de
-          </p>
+          <p className="text-lg">La inflación acumulada entre fue de:</p>
           <p className="text-2xl text-red-700 bg-red-100 w-fit p-3 rounded-md">
             <strong>{result.toFixed(2)}%</strong>
           </p>
