@@ -1,7 +1,7 @@
 "use client";
 
 import { useInflation } from "@/context";
-import { generateKeyMonthYear } from "@/utils";
+import { generateKeyMonthYear } from "@/lib/utils";
 import { differenceInMonths, subMonths } from "date-fns";
 import React, { useRef, useState } from "react";
 import InflationResult from "./InflationResult";

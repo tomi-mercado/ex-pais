@@ -1,4 +1,4 @@
-import { generateKeyMonthYear } from "./utils";
+import { generateKeyMonthYear } from "@/lib/utils";
 
 interface Response {
   data: [string, number][];

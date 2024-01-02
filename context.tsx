@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { generateKeyMonthYear } from "./utils";
+import { generateKeyMonthYear } from "./lib/utils";
 
 interface InflationContextData {
   inflationPerMonth: Record<string, number>;

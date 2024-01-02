@@ -22,9 +22,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="lofi">
+    <html lang="es">
       <body
-        className={`${inter.className} bg-base-300 min-h-screen flex flex-col justify-center items-center relative`}
+        className={`${inter.className} min-h-screen flex flex-col justify-center items-center relative`}
       >
         {children}
         <Footer />

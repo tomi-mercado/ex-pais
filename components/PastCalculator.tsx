@@ -1,5 +1,5 @@
 import { useInflation } from "@/context";
-import { addZeroIfNecessary } from "@/utils";
+import { addZeroIfNecessary } from "@/lib/utils";
 import React, { useState } from "react";
 
 const calculateNewPrice = (oldPrice: number, inflation: number) => {
