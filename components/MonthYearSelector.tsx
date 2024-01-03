@@ -1,6 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface MonthYearSelectorProps {
   onChange: (selectedMonth: number, selectedYear: number) => void;
@@ -25,16 +32,16 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
     defaultYear || currentDate.getFullYear()
   );
 
-  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSelectedMonth = parseInt(event.target.value);
+  const handleMonthChange = (value: string) => {
+    const newSelectedMonth = parseInt(value);
     setSelectedMonth(newSelectedMonth);
     onChange(newSelectedMonth, selectedYear);
   };
 
-  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSelectedYear = parseInt(event.target.value);
-    setSelectedYear(newSelectedYear);
-    onChange(selectedMonth, newSelectedYear);
+  const handleYearChange = (newSelectedYear: string) => {
+    const newYear = parseInt(newSelectedYear);
+    setSelectedYear(newYear);
+    onChange(selectedMonth, newYear);
   };
 
   const defaultYears = Array.from(
@@ -46,37 +53,47 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   const defaultMonths = Array.from({ length: 12 }, (_, index) => index + 1);
   const months = availableMonths || defaultMonths;
 
-  return (
-    <div className="grid grid-cols-[2fr,1fr] gap-2">
-      <select
-        className="select select-bordered"
-        value={selectedMonth}
-        onChange={handleMonthChange}
-      >
-        {months.map((month) => {
-          let dateStr = new Date(0, month - 1).toLocaleString("es-ES", {
-            month: "long",
-          });
-          dateStr = dateStr[0].toUpperCase() + dateStr.slice(1);
+  const defaultMonthStr = new Date(0, selectedMonth - 1).toLocaleString(
+    "es-ES",
+    {
+      month: "long",
+    }
+  );
 
-          return (
-            <option key={month} value={month}>
-              {dateStr}
-            </option>
-          );
-        })}
-      </select>
-      <select
-        className="select select-bordered"
-        value={selectedYear}
-        onChange={handleYearChange}
-      >
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
+  return (
+    <div className="grid grid-cols-[3fr,2fr] gap-2">
+      <Select onValueChange={handleMonthChange}>
+        <SelectTrigger className="w-32">
+          <SelectValue placeholder={defaultMonthStr} />
+        </SelectTrigger>
+        <SelectContent>
+          {months.map((month) => {
+            let dateStr = new Date(0, month - 1).toLocaleString("es-ES", {
+              month: "long",
+            });
+            dateStr = dateStr[0].toUpperCase() + dateStr.slice(1);
+
+            return (
+              <SelectItem key={month} value={`${month}`}>
+                {dateStr}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+
+      <Select onValueChange={handleYearChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder={defaultYear} />
+        </SelectTrigger>
+        <SelectContent>
+          {years.map((year) => (
+            <SelectItem key={year} value={`${year}`}>
+              {year}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

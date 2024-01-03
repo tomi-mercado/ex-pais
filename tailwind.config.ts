@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -58,6 +58,33 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // .CollapsibleContent {
+      //   overflow: hidden;
+      // }
+      // .CollapsibleContent[data-state="open"] {
+      //   animation: slideDown 300ms ease-out;
+      // }
+      // .CollapsibleContent[data-state="closed"] {
+      //   animation: slideUp 300ms ease-out;
+      // }
+
+      // @keyframes slideDown {
+      //   from {
+      //     height: 0;
+      //   }
+      //   to {
+      //     height: 300px;
+      //   }
+      // }
+
+      // @keyframes slideUp {
+      //   from {
+      //     height: 300px;
+      //   }
+      //   to {
+      //     height: 0;
+      //   }
+      // }
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -67,14 +94,24 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "slide-down": {
+          from: { maxHeight: "0", overflow: "hidden" },
+          to: { maxHeight: "300px", overflow: "auto" },
+        },
+        "slide-up": {
+          from: { maxHeight: "300px", overflow: "auto" },
+          to: { maxHeight: "0", overflow: "hidden" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "slide-down": "slide-down 0.3s linear",
+        "slide-up": "slide-up 0.3s linear",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

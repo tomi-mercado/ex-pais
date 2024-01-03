@@ -7,6 +7,9 @@ import React, { useRef, useState } from "react";
 import InflationResult from "./InflationResult";
 import MonthYearSelector from "./MonthYearSelector";
 import PastCalculator from "./PastCalculator";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 interface InflationCalculatorProps {
   defaultValues?: {
@@ -109,33 +112,24 @@ const MissingMonthInput: React.FC = () => {
   };
 
   return (
-    <label className="form-control max-w-[300px]">
-      <div className="label text-left">
-        <span className="label-text">
-          Inflación de {missingMonthStr[0].toUpperCase()}
-          {missingMonthStr.slice(1)} <br />
-          <span className="text-xs">
-            La inflación de este mes aún no fue publicada, puedes probar con un
-            valor estimado
-          </span>
+    <label className="form-control max-w-[300px] text-left">
+      <Label>
+        Inflación de {missingMonthStr[0].toUpperCase()}
+        {missingMonthStr.slice(1)} <br />
+        <span className="text-xs">
+          La inflación de este mes aún no fue publicada, podés probar con un
+          valor estimado
         </span>
-      </div>
-      <div className="w-full flex items-center gap-2">
-        <div className="relative w-full">
-          <input
-            type="text"
-            placeholder={(
-              inflationPerMonth[`${toMonth}-${toYear}`] * 100
-            ).toFixed(2)}
-            className="input input-bordered w-full max-w-xs pr-9"
-            onChange={handleChangeNotAvailableMonth}
-            value={notAvailableMonth}
-          />
-          <div className="absolute top-0 right-0 h-full w-8 flex items-center justify-center bg-slate-300">
-            %
-          </div>
-        </div>
-      </div>
+      </Label>
+      <Input
+        type="text"
+        placeholder={(inflationPerMonth[`${toMonth}-${toYear}`] * 100).toFixed(
+          2
+        )}
+        onChange={handleChangeNotAvailableMonth}
+        value={notAvailableMonth}
+        rightDecorator="%"
+      />
     </label>
   );
 };
@@ -236,7 +230,7 @@ const InflationCalculator: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full items-center">
+    <div className="flex flex-col gap-4 w-full items-center">
       <form
         className="flex flex-col gap-4 w-full items-center"
         onSubmit={handleSubmit}
@@ -265,9 +259,7 @@ const InflationCalculator: React.FC = () => {
             toYears,
           }) && <MissingMonthInput />}
 
-        <button className="btn btn-primary" type="submit">
-          Calcular
-        </button>
+        <Button type="submit">Calcular</Button>
       </form>
 
       <InflationResult isExploding={isExploding} />

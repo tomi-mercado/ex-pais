@@ -1,6 +1,14 @@
 import { useInflation } from "@/context";
-import { addZeroIfNecessary } from "@/lib/utils";
+import { addZeroIfNecessary, cn } from "@/lib/utils";
 import React, { useState } from "react";
+import { Button } from "./ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./ui/collapsible";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 const calculateNewPrice = (oldPrice: number, inflation: number) => {
   const percentage = inflation / 100;
@@ -22,29 +30,6 @@ const calculateOldPrice = (newPrice: number, inflation: number) => {
   }).format(oldPrice);
 };
 
-const InputWithDollarSign: React.FC<{
-  placeholder: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name: string;
-  value: number | null;
-}> = ({ onChange, placeholder, name, value }) => {
-  return (
-    <div className="relative w-full">
-      <div className="absolute top-0 left-0 h-full w-8 flex items-center justify-center bg-slate-300">
-        $
-      </div>
-      <input
-        type="text"
-        placeholder={placeholder}
-        className="input input-bordered w-full max-w-xs pl-9"
-        name={name}
-        onChange={onChange}
-        value={value || ""}
-      />
-    </div>
-  );
-};
-
 const PastCalculator: React.FC = () => {
   const { fromMonth, fromYear, result } = useInflation();
 
@@ -53,7 +38,7 @@ const PastCalculator: React.FC = () => {
     actual: null,
   });
 
-  const [collapseState, setCollapseState] = useState("close");
+  const [collapseOpen, setCollapseOpen] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -83,78 +68,88 @@ const PastCalculator: React.FC = () => {
   }
 
   return (
-    <div
-      tabIndex={0}
-      className={`collapse collapse-arrow border border-base-300 bg-base-200 cursor-pointer collapse-${collapseState}`}
+    <Collapsible
+      open={collapseOpen}
+      onOpenChange={setCollapseOpen}
+      className="w-full"
     >
-      <div
-        className="collapse-title font-medium text-left"
-        onClick={() => {
-          setCollapseState(collapseState === "open" ? "close" : "open");
-        }}
+      <CollapsibleTrigger asChild>
+        <Button
+          variant="default"
+          size="lg"
+          className="flex justify-between gap-4 items-center w-full whitespace-break-spaces text-left"
+        >
+          <p>¿Querés deprimirte un poco más? 👇</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`w-4 h-4 transform transition-transform duration-300 ${
+              collapseOpen ? "" : "rotate-180"
+            }`}
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 4a1 1 0 01.707.293l7 7a1 1 0 01-1.414 1.414L10 6.414 4.707 11.707a1 1 0 01-1.414-1.414l7-7A1 1 0 0110 4z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent
+        className={cn(
+          "p-4 bg-muted rounded-b-md",
+          collapseOpen ? "animate-slide-down" : "animate-slide-up"
+        )}
       >
-        ¿Querés deprimirte un poco más? 👇
-      </div>
-      <div className="collapse-content">
-        <form className="w-full">
-          <label className="form-control w-full">
-            <div className="label">
-              <span className="label-text">Algo que estaba...</span>
-            </div>
-            <div className="w-full flex items-center gap-2">
-              <InputWithDollarSign
-                placeholder={`Escribe un precio de ${addZeroIfNecessary(
-                  fromMonth
-                )}/${fromYear}`}
-                onChange={handleChange}
-                name="from"
-                value={prices.from}
-              />
-              {
-                <p className="w-full">
-                  Hoy está
-                  {!prices.from ? (
-                    "..."
-                  ) : (
-                    <strong>{` ${calculateNewPrice(
-                      prices.from,
-                      result
-                    )}`}</strong>
-                  )}
-                </p>
-              }
-            </div>
-          </label>
+        <form className="w-full text-left">
+          <Label>Algo que estaba...</Label>
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              placeholder={`Escribe un precio de ${addZeroIfNecessary(
+                fromMonth
+              )}/${fromYear}`}
+              onChange={handleChange}
+              name="from"
+              value={prices.from || ""}
+              leftDecorator="$"
+            />
+            <p className="w-full">
+              Hoy está
+              {!prices.from ? (
+                "..."
+              ) : (
+                <strong>{` ${calculateNewPrice(prices.from, result)}`}</strong>
+              )}
+            </p>
+          </div>
 
-          <label className="form-control w-full">
-            <div className="label">
-              <span className="label-text">Algo que hoy está...</span>
-            </div>
-            <div className="w-full flex items-center gap-2">
-              <InputWithDollarSign
-                placeholder="Escribe un precio actual"
-                onChange={handleChange}
-                name="actual"
-                value={prices.actual}
-              />
-              {
-                <p className="w-full">
-                  En {addZeroIfNecessary(fromMonth)}/{fromYear} estaba
-                  {!prices.actual ? (
-                    "..."
-                  ) : (
-                    <strong>{` ${calculateOldPrice(
-                      prices.actual,
-                      result
-                    )}`}</strong>
-                  )}
-                </p>
-              }
-            </div>
-          </label>
+          <Label>Algo que hoy está...</Label>
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              placeholder="Escribe un precio actual"
+              onChange={handleChange}
+              name="actual"
+              value={prices.actual || ""}
+              leftDecorator="$"
+            />
+            <p className="w-full">
+              En {addZeroIfNecessary(fromMonth)}/{fromYear} estaba
+              {!prices.actual ? (
+                "..."
+              ) : (
+                <strong>{` ${calculateOldPrice(
+                  prices.actual,
+                  result
+                )}`}</strong>
+              )}
+            </p>
+          </div>
         </form>
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 
