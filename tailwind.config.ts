@@ -22,8 +22,8 @@ const config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -58,33 +58,6 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      // .CollapsibleContent {
-      //   overflow: hidden;
-      // }
-      // .CollapsibleContent[data-state="open"] {
-      //   animation: slideDown 300ms ease-out;
-      // }
-      // .CollapsibleContent[data-state="closed"] {
-      //   animation: slideUp 300ms ease-out;
-      // }
-
-      // @keyframes slideDown {
-      //   from {
-      //     height: 0;
-      //   }
-      //   to {
-      //     height: 300px;
-      //   }
-      // }
-
-      // @keyframes slideUp {
-      //   from {
-      //     height: 300px;
-      //   }
-      //   to {
-      //     height: 0;
-      //   }
-      // }
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
