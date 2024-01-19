@@ -1,6 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { z } from "zod";
 import { generateKeyMonthYear } from "./utils";
 
 interface InflationContextData {
@@ -14,11 +16,9 @@ interface InflationContextData {
   toMonth: number;
   toYear: number;
   result: number | null;
-  setResult: React.Dispatch<React.SetStateAction<number | null>>;
-  setFromMonth: React.Dispatch<React.SetStateAction<number>>;
-  setFromYear: React.Dispatch<React.SetStateAction<number>>;
-  setToMonth: React.Dispatch<React.SetStateAction<number>>;
-  setToYear: React.Dispatch<React.SetStateAction<number>>;
+  setResult: (value: number) => void;
+  setFrom: (value: `${number}-${number}`) => void;
+  setTo: (value: `${number}-${number}`) => void;
   calculateInflation: (
     inflationPerMonth: Record<string, number>,
     from: { month: number; year: number },
@@ -82,6 +82,85 @@ const calculateInflation = (
   );
 };
 
+interface UseGetUsedDatesArgs {
+  defaultValues: {
+    from: {
+      month: number;
+      year: number;
+    };
+    to: {
+      month: number;
+      year: number;
+    };
+  };
+}
+
+const useGetUsedDates = ({ defaultValues }: UseGetUsedDatesArgs) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const fromParam = z
+    .string()
+    .regex(/^\d{1,2}-\d{4}$/)
+    .safeParse(searchParams.get("from"));
+  const toParam = z
+    .string()
+    .regex(/^\d{1,2}-\d{4}$/)
+    .safeParse(searchParams.get("to"));
+
+  const fromMonth = fromParam.success
+    ? parseInt(fromParam.data.split("-")[0])
+    : defaultValues.from.month;
+  const fromYear = fromParam.success
+    ? parseInt(fromParam.data.split("-")[1])
+    : defaultValues.from.year;
+
+  const toMonth = toParam.success
+    ? parseInt(toParam.data.split("-")[0])
+    : defaultValues.to.month;
+  const toYear = toParam.success
+    ? parseInt(toParam.data.split("-")[1])
+    : defaultValues.to.year;
+
+  useEffect(() => {
+    const somethingNotSuccess = !fromParam.success || !toParam.success;
+
+    if (!somethingNotSuccess) {
+      return;
+    }
+
+    const newParams = new URLSearchParams(searchParams);
+
+    if (!fromParam.success) {
+      newParams.delete("from");
+    }
+
+    if (!toParam.success) {
+      newParams.delete("to");
+    }
+
+    router.push(`?${newParams.toString()}`);
+  }, [
+    fromMonth,
+    fromParam.success,
+    fromYear,
+    router,
+    searchParams,
+    toMonth,
+    toParam.success,
+    toYear,
+  ]);
+
+  return {
+    fromMonth,
+    fromYear,
+    toMonth,
+    toYear,
+    fromParam: fromParam.success ? fromParam.data : null,
+    toParam: toParam.success ? toParam.data : null,
+  };
+};
+
 export const InflationProvider: React.FC<InflationProviderProps> = ({
   children,
   inflationPerMonth,
@@ -95,19 +174,68 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
   const lastYear = availableYears[availableYears.length - 1];
   const lastMonth = getMonthsOfYear(dates, lastYear).at(-1) as number;
 
-  const [result, setResult] = useState<number | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const [fromMonth, setFromMonth] = useState(firstMonth);
-  const [fromYear, setFromYear] = useState(firstYear);
+  const {
+    fromMonth = firstMonth,
+    fromYear = firstYear,
+    toMonth = lastMonth,
+    toYear = lastYear,
+    fromParam,
+    toParam,
+  } = useGetUsedDates({
+    defaultValues: {
+      from: {
+        month: firstMonth,
+        year: firstYear,
+      },
+      to: {
+        month: lastMonth,
+        year: lastYear,
+      },
+    },
+  });
 
-  const [toMonth, setToMonth] = useState(lastMonth);
-  const [toYear, setToYear] = useState(lastYear);
+  const [result, setResult] = useState<number | null>(
+    fromParam && toParam
+      ? calculateInflation(
+          inflationPerMonth,
+          {
+            month: fromMonth,
+            year: fromYear,
+          },
+          {
+            month: toMonth,
+            year: toYear,
+          }
+        )
+      : null
+  );
 
   const fromYears = availableYears.filter((year) => year <= toYear);
   const toYears = availableYears.filter((year) => year >= fromYear);
 
-  const monthsOfToYear = getMonthsOfYear(dates, toYear);
-  const monthsOfFromYear = getMonthsOfYear(dates, fromYear);
+  const monthsOfToYear = getMonthsOfYear(dates, toYear).filter(
+    (month) => toYear !== fromYear || month >= fromMonth
+  );
+  const monthsOfFromYear = getMonthsOfYear(dates, fromYear).filter(
+    (month) => month <= toMonth
+  );
+
+  const setFrom = (value: `${number}-${number}`) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("from", value.toString());
+
+    router.push(`?${newParams.toString()}`);
+  };
+
+  const setTo = (value: `${number}-${number}`) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("to", value.toString());
+
+    router.push(`?${newParams.toString()}`);
+  };
 
   const contextValue: InflationContextData = {
     inflationPerMonth,
@@ -122,10 +250,8 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     result,
     calculateInflation,
     setResult,
-    setFromMonth,
-    setFromYear,
-    setToMonth,
-    setToYear,
+    setFrom,
+    setTo,
   };
 
   return (
