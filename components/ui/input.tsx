@@ -27,7 +27,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
       >
         {leftDecorator && (
-          <div className="absolute top-0 left-0 h-full w-8 flex items-center justify-center bg-slate-300">
+          <div className="absolute top-0 left-0 h-full w-8 flex items-center justify-center bg-secondary">
             {leftDecorator}
           </div>
         )}
@@ -42,7 +42,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {rightDecorator && (
-          <div className="absolute top-0 right-0 h-full w-8 flex items-center justify-center bg-slate-300">
+          <div className="absolute top-0 right-0 h-full w-8 flex items-center justify-center bg-secondary">
             {rightDecorator}
           </div>
         )}
