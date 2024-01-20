@@ -1,13 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useRef } from "react";
 import { z } from "zod";
 import { generateKeyMonthYear } from "./lib/utils";
 
@@ -21,8 +15,7 @@ interface InflationContextData {
   fromYear: number;
   toMonth: number;
   toYear: number;
-  result: number | null;
-  setResult: (value: number) => void;
+  result: number;
   setFrom: (value: `${number}-${number}`) => void;
   setTo: (value: `${number}-${number}`) => void;
   calculateInflation: (
@@ -189,8 +182,6 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     fromYear = firstYear,
     toMonth = lastMonth,
     toYear = lastYear,
-    fromParam,
-    toParam,
   } = useGetUsedDates({
     defaultValues: {
       from: {
@@ -204,20 +195,16 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     },
   });
 
-  const [result, setResult] = useState<number | null>(
-    fromParam && toParam
-      ? calculateInflation(
-          inflationPerMonth,
-          {
-            month: fromMonth,
-            year: fromYear,
-          },
-          {
-            month: toMonth,
-            year: toYear,
-          }
-        )
-      : null
+  const result = calculateInflation(
+    inflationPerMonth,
+    {
+      month: fromMonth,
+      year: fromYear,
+    },
+    {
+      month: toMonth,
+      year: toYear,
+    }
   );
 
   const fromYears = availableYears.filter((year) => year <= toYear);
@@ -256,7 +243,6 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     toYear,
     result,
     calculateInflation,
-    setResult,
     setFrom,
     setTo,
   };
