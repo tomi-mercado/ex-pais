@@ -214,7 +214,7 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     (month) => toYear !== fromYear || month >= fromMonth
   );
   const monthsOfFromYear = getMonthsOfYear(dates, fromYear).filter(
-    (month) => month <= toMonth
+    (month) => toYear !== fromYear || month <= toMonth
   );
 
   const setFrom = (value: `${number}-${number}`) => {
