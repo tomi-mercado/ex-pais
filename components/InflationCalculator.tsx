@@ -3,6 +3,7 @@
 import { useInflation } from "@/context";
 import { generateKeyMonthYear } from "@/lib/utils";
 import { differenceInMonths, subMonths } from "date-fns";
+import { useSearchParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import InflationResult from "./InflationResult";
 import MonthYearSelector from "./MonthYearSelector";
@@ -145,22 +146,26 @@ const InflationCalculator: React.FC = () => {
     fromYear,
     toMonth,
     toYear,
-    setFromMonth,
-    setFromYear,
-    setToMonth,
-    setToYear,
+    setFrom,
+    setTo,
     setResult,
     calculateInflation,
   } = useInflation();
 
   const [isExploding, setIsExploding] = useState(false);
 
-  const isAlreadyExplode = useRef(false);
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
+  const isAlreadyExplode = useRef(!!from && !!to);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     try {
+      setFrom(`${fromMonth}-${fromYear}`);
+      setTo(`${toMonth}-${toYear}`);
+
       const result = calculateInflation(
         inflationPerMonth,
         {
@@ -174,6 +179,7 @@ const InflationCalculator: React.FC = () => {
       );
 
       if (isAlreadyExplode.current) {
+        setResult(result);
         return;
       }
 
@@ -190,8 +196,7 @@ const InflationCalculator: React.FC = () => {
   };
 
   const handleFromChange = (month: number, year: number) => {
-    setFromMonth(month);
-    setFromYear(year);
+    setFrom(`${month}-${year}`);
 
     if (isAlreadyExplode.current) {
       const result = calculateInflation(
@@ -210,8 +215,7 @@ const InflationCalculator: React.FC = () => {
   };
 
   const handleToChange = (month: number, year: number) => {
-    setToMonth(month);
-    setToYear(year);
+    setTo(`${month}-${year}`);
 
     if (isAlreadyExplode.current) {
       const result = calculateInflation(
