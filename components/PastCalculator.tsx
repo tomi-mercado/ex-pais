@@ -31,8 +31,52 @@ const calculateOldPrice = (newPrice: number, inflation: number) => {
   }).format(oldPrice);
 };
 
+const getLabelPastToFuture = (fromMonth: number, fromYear: number) => {
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  if (fromMonth === currentMonth && fromYear === currentYear) {
+    return "Algo que hoy cuesta...";
+  }
+
+  return `Algo que en ${addZeroIfNecessary(fromMonth)}/${fromYear} costaba...`;
+};
+
+const getResultStringPastToFuture = (toMonth: number, toYear: number) => {
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  if (toMonth === currentMonth && toYear === currentYear) {
+    return "Hoy cuesta";
+  }
+
+  return `En ${addZeroIfNecessary(toMonth)}/${toYear} costaba`;
+};
+
+const getLabelFutureToPast = (toMonth: number, toYear: number) => {
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  if (toMonth === currentMonth && toYear === currentYear) {
+    return "Algo que hoy cuesta...";
+  }
+
+  return `Algo que en ${addZeroIfNecessary(toMonth)}/${toYear} costaba...`;
+};
+
+const getResultStringFutureToPast = (fromMonth: number, fromYear: number) => {
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  if (fromMonth === currentMonth && fromYear === currentYear) {
+    return "Hoy cuesta";
+  }
+
+  return `En ${addZeroIfNecessary(fromMonth)}/${fromYear} costaba`;
+};
+
 const PastCalculator: React.FC = () => {
-  const { fromMonth, fromYear, result } = useInflation();
+  const { fromMonth, fromYear, result, toMonth, toYear } = useInflation();
 
   const searchParams = useSearchParams();
 
@@ -116,7 +160,7 @@ const PastCalculator: React.FC = () => {
       >
         <form className="w-full text-left flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <Label>Algo que estaba...</Label>
+            <Label>{getLabelPastToFuture(fromMonth, fromYear)}</Label>
             <div className="flex items-center gap-2">
               <Input
                 type="text"
@@ -129,7 +173,7 @@ const PastCalculator: React.FC = () => {
                 leftDecorator="$"
               />
               <p className="w-full">
-                Hoy está
+                {getResultStringPastToFuture(toMonth, toYear)}
                 {!pastFrom ? (
                   "..."
                 ) : (
@@ -140,7 +184,10 @@ const PastCalculator: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label>Algo que hoy está...</Label>
+            <Label>
+              {/* Algo que en {addZeroIfNecessary(toMonth)}/{toYear} estaba... */}
+              {getLabelFutureToPast(toMonth, toYear)}
+            </Label>
             <div className="flex items-center gap-2">
               <Input
                 type="text"
@@ -151,7 +198,7 @@ const PastCalculator: React.FC = () => {
                 leftDecorator="$"
               />
               <p className="w-full">
-                En {addZeroIfNecessary(fromMonth)}/{fromYear} estaba
+                {getResultStringFutureToPast(fromMonth, fromYear)}
                 {!pastActual ? (
                   "..."
                 ) : (

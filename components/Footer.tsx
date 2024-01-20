@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
       <p className="self-center text-center">
         Hecho con ❤️ desde el mejor país del mundo 🇦🇷 por{" "}
         <a
-          className="underline"
+          className="font-bold"
           target="_blank"
           href="https://tomas-mercado.dev"
         >
