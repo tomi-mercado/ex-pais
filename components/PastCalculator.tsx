@@ -1,6 +1,7 @@
 import { useInflation } from "@/context";
 import { addZeroIfNecessary } from "@/utils";
-import React, { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React from "react";
 
 const calculateNewPrice = (oldPrice: number, inflation: number) => {
   const percentage = inflation / 100;
@@ -48,34 +49,37 @@ const InputWithDollarSign: React.FC<{
 const PastCalculator: React.FC = () => {
   const { fromMonth, fromYear, result } = useInflation();
 
-  const [prices, setPrices] = useState({
-    from: null,
-    actual: null,
-  });
+  const searchParams = useSearchParams();
 
-  const [collapseState, setCollapseState] = useState("close");
+  const pastFrom = isNaN(parseFloat(searchParams.get("past-from") || ""))
+    ? null
+    : parseFloat(searchParams.get("past-from") || "");
+  const pastActual = isNaN(parseFloat(searchParams.get("past-actual") || ""))
+    ? null
+    : parseFloat(searchParams.get("past-actual") || "");
+
+  const collapseState = (!!result && searchParams.get("collapse")) || "close";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const newParams = new URLSearchParams(searchParams.toString());
 
     if (value === "" || value === "0") {
-      setPrices({
-        ...prices,
-        [name]: null,
-      });
+      newParams.delete(`past-${name}`);
+
+      window.history.pushState(null, "", `?${newParams.toString()}`);
+      return;
     }
 
     const numberValue = Number(value);
     const isNumber = !isNaN(numberValue);
-
     if (!isNumber) {
+      window.history.pushState(null, "", `?${newParams.toString()}`);
       return;
     }
 
-    setPrices({
-      ...prices,
-      [name]: numberValue,
-    });
+    newParams.set(`past-${name}`, numberValue.toString());
+    window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
   if (!result) {
@@ -90,7 +94,13 @@ const PastCalculator: React.FC = () => {
       <div
         className="collapse-title font-medium text-left"
         onClick={() => {
-          setCollapseState(collapseState === "open" ? "close" : "open");
+          const newParams = new URLSearchParams(searchParams);
+          newParams.set(
+            "collapse",
+            collapseState === "open" ? "close" : "open"
+          );
+
+          window.history.pushState(null, "", `?${newParams.toString()}`);
         }}
       >
         ¿Querés deprimirte un poco más? 👇
@@ -108,18 +118,15 @@ const PastCalculator: React.FC = () => {
                 )}/${fromYear}`}
                 onChange={handleChange}
                 name="from"
-                value={prices.from}
+                value={pastFrom}
               />
               {
                 <p className="w-full">
                   Hoy está
-                  {!prices.from ? (
+                  {!pastFrom ? (
                     "..."
                   ) : (
-                    <strong>{` ${calculateNewPrice(
-                      prices.from,
-                      result
-                    )}`}</strong>
+                    <strong>{` ${calculateNewPrice(pastFrom, result)}`}</strong>
                   )}
                 </p>
               }
@@ -135,16 +142,16 @@ const PastCalculator: React.FC = () => {
                 placeholder="Escribe un precio actual"
                 onChange={handleChange}
                 name="actual"
-                value={prices.actual}
+                value={pastActual}
               />
               {
                 <p className="w-full">
                   En {addZeroIfNecessary(fromMonth)}/{fromYear} estaba
-                  {!prices.actual ? (
+                  {!pastActual ? (
                     "..."
                   ) : (
                     <strong>{` ${calculateOldPrice(
-                      prices.actual,
+                      pastActual,
                       result
                     )}`}</strong>
                   )}

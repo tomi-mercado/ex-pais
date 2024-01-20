@@ -1,7 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { z } from "zod";
 import { generateKeyMonthYear } from "./utils";
 
@@ -99,6 +105,8 @@ const useGetUsedDates = ({ defaultValues }: UseGetUsedDatesArgs) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const alreadyFixedParams = useRef(false);
+
   const fromParam = z
     .string()
     .regex(/^\d{1,2}-\d{4}$/)
@@ -125,7 +133,7 @@ const useGetUsedDates = ({ defaultValues }: UseGetUsedDatesArgs) => {
   useEffect(() => {
     const somethingNotSuccess = !fromParam.success || !toParam.success;
 
-    if (!somethingNotSuccess) {
+    if (!somethingNotSuccess || alreadyFixedParams.current) {
       return;
     }
 
@@ -139,7 +147,7 @@ const useGetUsedDates = ({ defaultValues }: UseGetUsedDatesArgs) => {
       newParams.delete("to");
     }
 
-    router.push(`?${newParams.toString()}`);
+    router.replace(`?${newParams.toString()}`);
   }, [
     fromMonth,
     fromParam.success,
@@ -175,7 +183,6 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
   const lastMonth = getMonthsOfYear(dates, lastYear).at(-1) as number;
 
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const {
     fromMonth = firstMonth,
@@ -227,14 +234,14 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     const newParams = new URLSearchParams(searchParams);
     newParams.set("from", value.toString());
 
-    router.push(`?${newParams.toString()}`);
+    window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
   const setTo = (value: `${number}-${number}`) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("to", value.toString());
 
-    router.push(`?${newParams.toString()}`);
+    window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
   const contextValue: InflationContextData = {
