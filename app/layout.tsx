@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { FaDatabase } from "react-icons/fa";
@@ -27,17 +28,9 @@ export default function RootLayout({
       <body
         className={`${inter.className} min-h-screen flex flex-col justify-center items-center relative`}
       >
-        <div className="py-6 px-4 h-full flex flex-col justify-between items-center grow gap-4 w-full">
-          <div className="flex flex-col gap-6 text-center items-center p-6 rounded-xl bg-card w-fit text-card-foreground light">
-            <div className="flex flex-col gap-2 text-center items-center">
-              <h1 className="text-4xl">📉</h1>
-              <h1 className="text-4xl">Ex País</h1>
-              <p className="text-xl">
-                Calcula la inflación de Argentina en un tramo específico de
-                tiempo.
-              </p>
-            </div>
-
+        <Navbar />
+        <main className="py-6 px-4 h-full flex flex-col justify-between items-center grow gap-4 w-full">
+          <div className="flex flex-col gap-6 text-center items-center p-6 rounded-xl bg-card w-fit text-card-foreground light md:min-w-[670px]">
             {children}
           </div>
 
@@ -57,7 +50,7 @@ export default function RootLayout({
               </a>
             </span>
           </p>
-        </div>
+        </main>
         <Footer />
       </body>
     </html>

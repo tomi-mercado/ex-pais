@@ -7,8 +7,12 @@ export default async function CanastaBasica() {
   console.log(canastaBasicaPerMonth);
 
   return (
-    <StadisticProvider stadisticPerMonth={canastaBasicaPerMonth}>
-      <CanastaBasicaCalculator />
-    </StadisticProvider>
+    <>
+      <p className="text-xl">Calculadora de canasta básica</p>
+
+      <StadisticProvider stadisticPerMonth={canastaBasicaPerMonth}>
+        <CanastaBasicaCalculator />
+      </StadisticProvider>
+    </>
   );
 }

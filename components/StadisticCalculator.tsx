@@ -32,6 +32,7 @@ const StadisticCalculator: React.FC<{
     <div className="flex flex-col gap-4 w-full items-center">
       <form className="flex flex-col gap-4 w-full items-center">
         <MonthYearSelector
+          label="Entre"
           onChange={handleFromChange}
           defaultMonth={fromMonth}
           defaultYear={fromYear}
@@ -40,6 +41,7 @@ const StadisticCalculator: React.FC<{
         />
 
         <MonthYearSelector
+          label="y"
           onChange={handleToChange}
           defaultMonth={toMonth}
           defaultYear={toYear}

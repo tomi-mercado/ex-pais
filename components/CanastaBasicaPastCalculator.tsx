@@ -75,7 +75,7 @@ const CanastaBasicaPastCalculator: React.FC = () => {
 
   return (
     <DepressorWrapper>
-      <div className="flex items-end gap-4">
+      <div className="flex flex-col md:flex-row md:items-end gap-4">
         <div className="flex flex-col gap-2 text-left">
           <Label>Ingresa un precio</Label>
           <Input
@@ -86,7 +86,7 @@ const CanastaBasicaPastCalculator: React.FC = () => {
           />
         </div>
         <div className="flex flex-col">
-          <p>
+          <p className="text-left">
             en {addZeroIfNecessary(fromMonth)}/{fromYear} equivalían a{" "}
             {calculateAmountOfCanastasBasicasInMonth(
               price || 0,
@@ -96,7 +96,7 @@ const CanastaBasicaPastCalculator: React.FC = () => {
             )}{" "}
             canastas básicas
           </p>
-          <p>
+          <p className="text-left">
             en {addZeroIfNecessary(toMonth)}/{toYear} equivalían a{" "}
             {calculateAmountOfCanastasBasicasInMonth(
               price || 0,

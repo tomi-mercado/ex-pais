@@ -6,8 +6,12 @@ export default async function Home() {
   const inflationPerMonth = await api.inflationPerMonth.get();
 
   return (
-    <StadisticProvider stadisticPerMonth={inflationPerMonth}>
-      <InflationCalculator />
-    </StadisticProvider>
+    <>
+      <p className="text-xl">Calculadora de inflación</p>
+
+      <StadisticProvider stadisticPerMonth={inflationPerMonth}>
+        <InflationCalculator />
+      </StadisticProvider>
+    </>
   );
 }

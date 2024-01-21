@@ -15,9 +15,11 @@ interface MonthYearSelectorProps {
   defaultYear?: number;
   availableYears?: number[];
   availableMonths?: number[];
+  label: string;
 }
 
 const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
+  label,
   onChange,
   defaultMonth,
   defaultYear,
@@ -61,7 +63,9 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   );
 
   return (
-    <div className="grid grid-cols-[3fr,2fr] gap-2">
+    <div className="grid grid-cols-[1fr,3fr,1fr,2fr] gap-2 items-center">
+      <p>{label}</p>
+
       <Select onValueChange={handleMonthChange}>
         <SelectTrigger className="w-32">
           <SelectValue placeholder={defaultMonthStr} />
@@ -82,6 +86,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
         </SelectContent>
       </Select>
 
+      <p>de</p>
       <Select onValueChange={handleYearChange}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder={defaultYear} />
