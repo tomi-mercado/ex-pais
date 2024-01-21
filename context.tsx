@@ -3,10 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { createContext, useContext, useEffect, useRef } from "react";
 import { z } from "zod";
-import { generateKeyMonthYear } from "./lib/utils";
 
-interface InflationContextData {
-  inflationPerMonth: Record<string, number>;
+interface StadisticContextData {
+  stadisticPerMonth: Record<string, number>;
   monthsOfFromYear: number[];
   monthsOfToYear: number[];
   fromYears: number[];
@@ -15,22 +14,16 @@ interface InflationContextData {
   fromYear: number;
   toMonth: number;
   toYear: number;
-  result: number;
   setFrom: (value: `${number}-${number}`) => void;
   setTo: (value: `${number}-${number}`) => void;
-  calculateInflation: (
-    inflationPerMonth: Record<string, number>,
-    from: { month: number; year: number },
-    to: { month: number; year: number }
-  ) => number;
 }
 
-interface InflationProviderProps {
+interface StadisticProviderProps {
   children: React.ReactNode;
-  inflationPerMonth: Record<string, number>;
+  stadisticPerMonth: Record<string, number>;
 }
 
-const InflationContext = createContext<InflationContextData | undefined>(
+const StadisticContext = createContext<StadisticContextData | undefined>(
   undefined
 );
 
@@ -43,43 +36,6 @@ const getAvailableYears = (dates: string[]) =>
   Array.from(new Set(dates.map((date) => parseInt(date.split("-")[1])))).sort(
     (a, b) => a - b
   );
-
-const calculateInflation = (
-  inflationPerMonth: Record<string, number>,
-  from: { month: number; year: number },
-  to: { month: number; year: number }
-) => {
-  const fromKey = generateKeyMonthYear(from.month, from.year);
-  const toKey = generateKeyMonthYear(to.month, to.year);
-
-  const inflationPerMonthArr = Object.entries(inflationPerMonth);
-
-  const fromValueIndex = inflationPerMonthArr.findIndex(
-    ([key]) => key === fromKey
-  );
-  const toValueIndex = inflationPerMonthArr.findIndex(([key]) => key === toKey);
-
-  if (fromValueIndex === -1) {
-    throw new Error(`No inflation data for ${fromKey}`);
-  }
-
-  if (toValueIndex === -1) {
-    throw new Error(`No inflation data for ${toKey}`);
-  }
-
-  const inflationPerMonthSlice = inflationPerMonthArr.slice(
-    fromValueIndex,
-    toValueIndex + 1
-  );
-
-  return (
-    (inflationPerMonthSlice.reduce((acc, [, inflationMonth]) => {
-      return acc * (1 + inflationMonth);
-    }, 1) -
-      1) *
-    100
-  );
-};
 
 interface UseGetUsedDatesArgs {
   defaultValues: {
@@ -162,11 +118,11 @@ const useGetUsedDates = ({ defaultValues }: UseGetUsedDatesArgs) => {
   };
 };
 
-export const InflationProvider: React.FC<InflationProviderProps> = ({
+export const StadisticProvider: React.FC<StadisticProviderProps> = ({
   children,
-  inflationPerMonth,
+  stadisticPerMonth,
 }) => {
-  const dates = Object.keys(inflationPerMonth);
+  const dates = Object.keys(stadisticPerMonth);
   const availableYears = getAvailableYears(dates);
 
   const firstYear = availableYears[0];
@@ -195,18 +151,6 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     },
   });
 
-  const result = calculateInflation(
-    inflationPerMonth,
-    {
-      month: fromMonth,
-      year: fromYear,
-    },
-    {
-      month: toMonth,
-      year: toYear,
-    }
-  );
-
   const fromYears = availableYears.filter((year) => year <= toYear);
   const toYears = availableYears.filter((year) => year >= fromYear);
 
@@ -231,8 +175,8 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
-  const contextValue: InflationContextData = {
-    inflationPerMonth,
+  const contextValue: StadisticContextData = {
+    stadisticPerMonth,
     monthsOfFromYear,
     monthsOfToYear,
     fromYears,
@@ -241,23 +185,21 @@ export const InflationProvider: React.FC<InflationProviderProps> = ({
     fromYear,
     toMonth,
     toYear,
-    result,
-    calculateInflation,
     setFrom,
     setTo,
   };
 
   return (
-    <InflationContext.Provider value={contextValue}>
+    <StadisticContext.Provider value={contextValue}>
       {children}
-    </InflationContext.Provider>
+    </StadisticContext.Provider>
   );
 };
 
-export const useInflation = () => {
-  const context = useContext(InflationContext);
+export const useStadistic = () => {
+  const context = useContext(StadisticContext);
   if (!context) {
-    throw new Error("useInflation must be used within a InflationProvider");
+    throw new Error("useStadistic must be used within a StadisticProvider");
   }
   return context;
 };

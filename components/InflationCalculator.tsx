@@ -1,57 +1,77 @@
 "use client";
 
-import { useInflation } from "@/context";
+import { useStadistic } from "@/context";
+import { generateKeyMonthYear } from "@/lib/utils";
 import React from "react";
-import InflationResult from "./InflationResult";
-import MonthYearSelector from "./MonthYearSelector";
-import PastCalculator from "./PastCalculator";
+import InflationPastCalculator from "./InflationPastCalculator";
+import Result from "./Result";
+import StadisticCalculator from "./StadisticCalculator";
+
+const calculateInflation = (
+  inflationPerMonth: Record<string, number>,
+  from: { month: number; year: number },
+  to: { month: number; year: number }
+) => {
+  const fromKey = generateKeyMonthYear(from.month, from.year);
+  const toKey = generateKeyMonthYear(to.month, to.year);
+
+  const inflationPerMonthArr = Object.entries(inflationPerMonth);
+
+  const fromValueIndex = inflationPerMonthArr.findIndex(
+    ([key]) => key === fromKey
+  );
+  const toValueIndex = inflationPerMonthArr.findIndex(([key]) => key === toKey);
+
+  if (fromValueIndex === -1) {
+    throw new Error(`No inflation data for ${fromKey}`);
+  }
+
+  if (toValueIndex === -1) {
+    throw new Error(`No inflation data for ${toKey}`);
+  }
+
+  const inflationPerMonthSlice = inflationPerMonthArr.slice(
+    fromValueIndex,
+    toValueIndex + 1
+  );
+
+  return (
+    (inflationPerMonthSlice.reduce((acc, [, inflationMonth]) => {
+      return acc * (1 + inflationMonth);
+    }, 1) -
+      1) *
+    100
+  );
+};
 
 const InflationCalculator: React.FC = () => {
   const {
-    monthsOfFromYear,
-    monthsOfToYear,
-    fromYears,
-    toYears,
+    stadisticPerMonth: inflationPerMonth,
     fromMonth,
     fromYear,
     toMonth,
     toYear,
-    setFrom,
-    setTo,
-  } = useInflation();
-
-  const handleFromChange = (month: number, year: number) => {
-    setFrom(`${month}-${year}`);
-  };
-
-  const handleToChange = (month: number, year: number) => {
-    setTo(`${month}-${year}`);
-  };
+  } = useStadistic();
+  const result = calculateInflation(
+    inflationPerMonth,
+    {
+      month: fromMonth,
+      year: fromYear,
+    },
+    {
+      month: toMonth,
+      year: toYear,
+    }
+  );
 
   return (
-    <div className="flex flex-col gap-4 w-full items-center">
-      <form className="flex flex-col gap-4 w-full items-center">
-        <MonthYearSelector
-          onChange={handleFromChange}
-          defaultMonth={fromMonth}
-          defaultYear={fromYear}
-          availableYears={fromYears}
-          availableMonths={monthsOfFromYear}
-        />
-
-        <MonthYearSelector
-          onChange={handleToChange}
-          defaultMonth={toMonth}
-          defaultYear={toYear}
-          availableYears={toYears}
-          availableMonths={monthsOfToYear}
-        />
-      </form>
-
-      <InflationResult />
-
-      <PastCalculator />
-    </div>
+    <StadisticCalculator>
+      <Result
+        label="La inflación acumulada entre fue de:"
+        result={`${result.toFixed(2)}%`}
+      />
+      <InflationPastCalculator result={result} />
+    </StadisticCalculator>
   );
 };
 
