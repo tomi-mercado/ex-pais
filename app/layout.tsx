@@ -30,7 +30,7 @@ export default function RootLayout({
       >
         <Navbar />
         <main className="py-6 px-4 h-full flex flex-col justify-between items-center grow gap-4 w-full">
-          <div className="flex flex-col gap-6 text-center items-center p-6 rounded-xl bg-card w-fit text-card-foreground light md:min-w-[670px]">
+          <div className="flex flex-col gap-6 text-center items-center p-6 rounded-xl bg-card w-fit text-card-foreground light md:min-w-[670px] relative">
             {children}
           </div>
 
@@ -40,13 +40,6 @@ export default function RootLayout({
               Los datos son provistos por{" "}
               <a className="underline" href="https://datos.gob.ar/dataset">
                 Datos Argentina
-              </a>
-              , y el cálculo se realiza a partir del{" "}
-              <a
-                className="underline"
-                href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
-              >
-                IPC
               </a>
             </span>
           </p>
