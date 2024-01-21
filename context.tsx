@@ -48,22 +48,57 @@ interface UseGetUsedDatesArgs {
       year: number;
     };
   };
+  firstDateAvailable: string;
+  lastDateAvailable: string;
 }
 
-const useGetUsedDates = ({ defaultValues }: UseGetUsedDatesArgs) => {
+const useGetUsedDates = ({
+  defaultValues,
+  firstDateAvailable,
+  lastDateAvailable,
+}: UseGetUsedDatesArgs) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const alreadyFixedParams = useRef(false);
 
-  const fromParam = z
+  const dateParamSchema = z
     .string()
     .regex(/^\d{1,2}-\d{4}$/)
-    .safeParse(searchParams.get("from"));
-  const toParam = z
-    .string()
-    .regex(/^\d{1,2}-\d{4}$/)
-    .safeParse(searchParams.get("to"));
+    .refine((value) => {
+      const month = parseInt(value.split("-")[0]);
+      const year = parseInt(value.split("-")[1]);
+
+      const firstDateAvailableMonth = parseInt(
+        firstDateAvailable.split("-")[0]
+      );
+      const firstDateAvailableYear = parseInt(firstDateAvailable.split("-")[1]);
+
+      const firstDateAvailableIsAfter =
+        year < firstDateAvailableYear ||
+        (year === firstDateAvailableYear && month < firstDateAvailableMonth);
+
+      if (firstDateAvailableIsAfter) {
+        return false;
+      }
+
+      const lastDateAvailableMonth = parseInt(lastDateAvailable.split("-")[0]);
+
+      const lastDateAvailableYear = parseInt(lastDateAvailable.split("-")[1]);
+
+      const lastDateAvailableIsBefore =
+        year > lastDateAvailableYear ||
+        (year === lastDateAvailableYear && month > lastDateAvailableMonth);
+
+      if (lastDateAvailableIsBefore) {
+        return false;
+      }
+
+      return true;
+    });
+
+  const fromParam = dateParamSchema.safeParse(searchParams.get("from"));
+  const toParam = dateParamSchema.safeParse(searchParams.get("to"));
 
   const fromMonth = fromParam.success
     ? parseInt(fromParam.data.split("-")[0])
@@ -149,6 +184,8 @@ export const StadisticProvider: React.FC<StadisticProviderProps> = ({
         year: lastYear,
       },
     },
+    firstDateAvailable: dates[0],
+    lastDateAvailable: dates[dates.length - 1],
   });
 
   const fromYears = availableYears.filter((year) => year <= toYear);
