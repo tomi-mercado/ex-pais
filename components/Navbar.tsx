@@ -14,6 +14,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center gap-4">
           <Link href="/">Inflación</Link>
           <Link href="/canasta-basica">Canasta básica</Link>
+          <Link href="/salario-minimo">Salario mínimo</Link>
         </div>
       </div>
     </nav>

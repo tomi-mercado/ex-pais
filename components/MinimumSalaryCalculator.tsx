@@ -3,24 +3,24 @@
 import { useStadistic } from "@/context";
 import { generateKeyMonthYear } from "@/lib/utils";
 import React from "react";
-import CanastaBasicaPastCalculator from "./CanastaBasicaPastCalculator";
+import MinimumSalaryPastCalculator from "./MinimumSalaryPastCalculator";
 import Result from "./Result";
 import StadisticCalculator from "./StadisticCalculator";
 
-const calculateCanastaBasicaVariation = (
-  canastaBasicaPerMonth: Record<string, number>,
+const calculateMinimumSalaryVariation = (
+  minimumSalaryPerMonth: Record<string, number>,
   from: { month: number; year: number },
   to: { month: number; year: number }
 ) => {
   const fromKey = generateKeyMonthYear(from.month, from.year);
   const toKey = generateKeyMonthYear(to.month, to.year);
 
-  const canastaBasicaPerMonthArr = Object.entries(canastaBasicaPerMonth);
+  const minimumSalaryPerMonthArr = Object.entries(minimumSalaryPerMonth);
 
-  const fromValueIndex = canastaBasicaPerMonthArr.findIndex(
+  const fromValueIndex = minimumSalaryPerMonthArr.findIndex(
     ([key]) => key === fromKey
   );
-  const toValueIndex = canastaBasicaPerMonthArr.findIndex(
+  const toValueIndex = minimumSalaryPerMonthArr.findIndex(
     ([key]) => key === toKey
   );
 
@@ -32,22 +32,22 @@ const calculateCanastaBasicaVariation = (
     throw new Error(`No canasta basica data for ${toKey}`);
   }
 
-  const fromValue = canastaBasicaPerMonthArr[fromValueIndex][1];
-  const toValue = canastaBasicaPerMonthArr[toValueIndex][1];
+  const fromValue = minimumSalaryPerMonthArr[fromValueIndex][1];
+  const toValue = minimumSalaryPerMonthArr[toValueIndex][1];
 
   return ((toValue - fromValue) / fromValue) * 100;
 };
 
-const CanastaBasicaCalculator: React.FC = () => {
+const MinimumSalaryCalculator: React.FC = () => {
   const {
-    stadisticPerMonth: canastaBasicaPerMonth,
+    stadisticPerMonth: minimumSalaryPerMonth,
     fromMonth,
     fromYear,
     toMonth,
     toYear,
   } = useStadistic();
-  const result = calculateCanastaBasicaVariation(
-    canastaBasicaPerMonth,
+  const result = calculateMinimumSalaryVariation(
+    minimumSalaryPerMonth,
     {
       month: fromMonth,
       year: fromYear,
@@ -61,12 +61,12 @@ const CanastaBasicaCalculator: React.FC = () => {
   return (
     <StadisticCalculator>
       <Result
-        label="La canasta básica por adulto aumentó"
+        label="El salario mínimo vital y móvil mensual aumentó"
         result={`${result.toFixed(2)}%`}
       />
-      <CanastaBasicaPastCalculator />
+      <MinimumSalaryPastCalculator />
     </StadisticCalculator>
   );
 };
 
-export default CanastaBasicaCalculator;
+export default MinimumSalaryCalculator;

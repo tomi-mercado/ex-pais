@@ -56,12 +56,41 @@ const getCanastaBasicaPerMonth = async () => {
   return canastaBasicaPerMonth;
 };
 
+const minimumSalaryFirstDateAvailable = "2016-01-01";
+const minimumSalaryUrl = `https://apis.datos.gob.ar/series/api/series/?ids=57.1_SMVMD_0_M_33&start_date=${minimumSalaryFirstDateAvailable}&format=json`;
+
+const getMinimumSalaryPerMonth = async () => {
+  const response = await fetch(minimumSalaryUrl, {
+    next: {
+      revalidate: 1,
+    },
+  });
+  const { data } = (await response.json()) as Response;
+
+  const minimumSalaryPerMonth = data.reduce((acc, [dateStr, value]) => {
+    const date = new Date(`${dateStr}:`);
+
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    const key = generateKeyMonthYear(month, year);
+
+    acc[key] = value * 30;
+    return acc;
+  }, {} as Record<string, number>);
+
+  return minimumSalaryPerMonth;
+};
+
 const api = {
   inflationPerMonth: {
     get: getInflationPerMonth,
   },
   canastaBasicaPerMonth: {
     get: getCanastaBasicaPerMonth,
+  },
+  minimumSalaryPerMonth: {
+    get: getMinimumSalaryPerMonth,
   },
 };
 

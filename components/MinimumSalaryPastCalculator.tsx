@@ -8,9 +8,9 @@ import DepressorWrapper from "./DepressorWrapper";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
-const PRICE_PARAM_KEY = "canasta-basica-price";
+const PRICE_PARAM_KEY = "minimum-salary-price";
 
-const getCanastaBasicaPrice = (searchParams: URLSearchParams) => {
+const getMinimumSalaryPrice = (searchParams: URLSearchParams) => {
   const priceParam = searchParams.get(PRICE_PARAM_KEY);
 
   if (priceParam === null || priceParam === "") {
@@ -30,26 +30,26 @@ const calculateAmountOfCanastasBasicasInMonth = (
   price: number,
   month: number,
   year: number,
-  canastaBasicaPerMonth: Record<string, number>
+  minumumSalaryPerMonth: Record<string, number>
 ) => {
   const key = generateKeyMonthYear(month, year);
-  const stadistic = canastaBasicaPerMonth[key];
+  const stadistic = minumumSalaryPerMonth[key];
 
   if (!stadistic) {
     throw new Error("Stadistic not found");
   }
 
-  const canastasBasicas = (price / stadistic).toFixed(2);
+  const minimumSalaries = (price / stadistic).toFixed(2);
 
-  return canastasBasicas;
+  return minimumSalaries;
 };
 
-const CanastaBasicaPastCalculator: React.FC = () => {
+const MinimumSalaryPastCalculator: React.FC = () => {
   const { fromMonth, fromYear, toMonth, toYear, stadisticPerMonth } =
     useStadistic();
 
   const searchParams = useSearchParams();
-  const price = getCanastaBasicaPrice(searchParams);
+  const price = getMinimumSalaryPrice(searchParams);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -94,7 +94,7 @@ const CanastaBasicaPastCalculator: React.FC = () => {
               fromYear,
               stadisticPerMonth
             )}{" "}
-            canastas básicas
+            salarios mínimos
           </p>
           <p className="text-left">
             en {addZeroIfNecessary(toMonth)}/{toYear} equivalían a{" "}
@@ -104,7 +104,7 @@ const CanastaBasicaPastCalculator: React.FC = () => {
               toYear,
               stadisticPerMonth
             )}{" "}
-            canastas básicas
+            salarios mínimos
           </p>
         </div>
       </div>
@@ -112,4 +112,4 @@ const CanastaBasicaPastCalculator: React.FC = () => {
   );
 };
 
-export default CanastaBasicaPastCalculator;
+export default MinimumSalaryPastCalculator;
