@@ -5,7 +5,7 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { Menu, X } from "lucide-react";
 import Link, { LinkProps } from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "./ui/drawer";
 
 const MD_BREAKPOINT = 768;
@@ -115,7 +115,9 @@ const Navbar: React.FC<{
           ))}
         </div>
 
-        <NavbarDrawer links={links} />
+        <Suspense>
+          <NavbarDrawer links={links} />
+        </Suspense>
       </div>
     </nav>
   );
