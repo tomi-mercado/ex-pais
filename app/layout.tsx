@@ -28,7 +28,13 @@ export default function RootLayout({
       <body
         className={`${inter.className} min-h-screen flex flex-col justify-center items-center relative`}
       >
-        <Navbar />
+        <Navbar
+          links={[
+            { href: "/", text: "Inflación" },
+            { href: "/canasta-basica", text: "Canasta básica" },
+            { href: "/salario-minimo", text: "Salario mínimo" },
+          ]}
+        />
         <main className="py-6 px-4 h-full flex flex-col justify-between items-center grow gap-4 w-full">
           <div className="flex flex-col gap-6 text-center items-center p-6 rounded-xl bg-card w-fit text-card-foreground light md:min-w-[670px] relative">
             {children}

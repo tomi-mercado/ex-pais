@@ -45,6 +45,6 @@
     @apply bg-background text-foreground;
   }
   a {
-    @apply hover:text-primary hover:font-semibold;
+    @apply hover:text-primary;
   }
 }
