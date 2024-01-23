@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import Aclaration from "./Aclaration";
 import { Share } from "./Share";
 
@@ -47,8 +47,10 @@ const RightTopDecorators: React.FC = () => {
 
   return (
     <div className="absolute top-4 right-4 flex items-center gap-2">
-      {aclarationChildren && <Aclaration>{aclarationChildren}</Aclaration>}
-      <Share />
+      <Suspense>
+        {aclarationChildren && <Aclaration>{aclarationChildren}</Aclaration>}
+        <Share />
+      </Suspense>
     </div>
   );
 };
