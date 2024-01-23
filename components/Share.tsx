@@ -19,15 +19,15 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { FaWhatsapp } from "react-icons/fa";
 import { useToast } from "./ui/use-toast";
 
+const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN || "";
+
 export function Share() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [, copyToClipboard] = useCopyToClipboard();
   const { toast } = useToast();
 
-  const shareablePath = `${
-    window?.location.origin
-  }${pathname}?${searchParams.toString()}`;
+  const shareablePath = `${ORIGIN}${pathname}?${searchParams.toString()}`;
 
   const handleCopy = () => {
     copyToClipboard(shareablePath);
@@ -42,10 +42,6 @@ export function Share() {
   );
   const twitterShareHref = `https://twitter.com/intent/tweet?text=${encodedText}&url=${shareablePath}`;
   const whatsappShareHref = `https://api.whatsapp.com/send?text=${encodedText}${shareablePath}`;
-
-  if (typeof window === "undefined") {
-    return null;
-  }
 
   return (
     <Dialog>
