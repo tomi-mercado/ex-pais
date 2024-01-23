@@ -26,7 +26,7 @@ export function Share() {
   const { toast } = useToast();
 
   const shareablePath = `${
-    window.location.origin
+    window?.location.origin
   }${pathname}?${searchParams.toString()}`;
 
   const handleCopy = () => {
@@ -42,6 +42,10 @@ export function Share() {
   );
   const twitterShareHref = `https://twitter.com/intent/tweet?text=${encodedText}&url=${shareablePath}`;
   const whatsappShareHref = `https://api.whatsapp.com/send?text=${encodedText}${shareablePath}`;
+
+  if (typeof window === "undefined") {
+    return null;
+  }
 
   return (
     <Dialog>
