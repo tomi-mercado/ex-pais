@@ -40,8 +40,12 @@ export function Share() {
   const encodedText = encodeURIComponent(
     "Mira cómo se destroza nuestro poder adquisitivo 😔\n\n"
   );
-  const twitterShareHref = `https://twitter.com/intent/tweet?text=${encodedText}&url=${shareablePath}`;
-  const whatsappShareHref = `https://api.whatsapp.com/send?text=${encodedText}${shareablePath}`;
+  const twitterShareHref = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodeURIComponent(
+    shareablePath
+  )}`;
+  const whatsappShareHref = `https://api.whatsapp.com/send?text=${encodedText}${encodeURIComponent(
+    shareablePath
+  )}`;
 
   return (
     <Dialog>
