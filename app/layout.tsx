@@ -36,7 +36,7 @@ export default function RootLayout({
           ]}
         />
         <main className="py-6 px-4 h-full flex flex-col justify-between items-center grow gap-4 w-full">
-          <div className="flex flex-col gap-6 text-center items-center p-6 rounded-xl bg-card w-fit text-card-foreground light md:min-w-[670px] relative">
+          <div className="flex flex-col gap-6 text-center items-center py-9 px-6 rounded-xl bg-card w-fit text-card-foreground light md:min-w-[670px] relative">
             {children}
           </div>
 
