@@ -1,8 +1,10 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import RightTopDecorators from "@/components/RightTopDecorators";
+import { Toaster } from "@/components/ui/toaster";
+import { Database as FaDatabase } from "lucide-react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { FaDatabase } from "react-icons/fa";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,8 +37,10 @@ export default function RootLayout({
             { href: "/salario-minimo", text: "Salario mínimo" },
           ]}
         />
+        <Toaster />
         <main className="py-6 px-4 h-full flex flex-col justify-between items-center grow gap-4 w-full">
           <div className="flex flex-col gap-6 text-center items-center py-9 px-6 rounded-xl bg-card w-fit text-card-foreground light md:min-w-[670px] relative">
+            <RightTopDecorators />
             {children}
           </div>
 
