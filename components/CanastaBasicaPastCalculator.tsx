@@ -58,19 +58,19 @@ const CanastaBasicaPastCalculator: React.FC = () => {
     if (value === "" || value === "0") {
       newParams.delete(PRICE_PARAM_KEY);
 
-      window.history.pushState(null, "", `?${newParams.toString()}`);
+      window.history.replaceState(null, "", `?${newParams.toString()}`);
       return;
     }
 
     const numberValue = Number(value);
     const isNumber = !isNaN(numberValue);
     if (!isNumber) {
-      window.history.pushState(null, "", `?${newParams.toString()}`);
+      window.history.replaceState(null, "", `?${newParams.toString()}`);
       return;
     }
 
     newParams.set(PRICE_PARAM_KEY, numberValue.toString());
-    window.history.pushState(null, "", `?${newParams.toString()}`);
+    window.history.replaceState(null, "", `?${newParams.toString()}`);
   };
 
   return (

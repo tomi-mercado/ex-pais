@@ -33,6 +33,7 @@ export default function RootLayout({
         <Navbar
           links={[
             { href: "/", text: "Inflación" },
+            { href: "/poder-adquisitivo", text: "Poder adquisitivo" },
             { href: "/canasta-basica", text: "Canasta básica" },
             { href: "/salario-minimo", text: "Salario mínimo" },
           ]}

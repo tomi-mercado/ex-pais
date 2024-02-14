@@ -21,7 +21,7 @@ const DepressorWrapper: React.FC<{
         const newParams = new URLSearchParams(searchParams);
         newParams.set("collapse", collapseState === "open" ? "close" : "open");
 
-        window.history.pushState(null, "", `?${newParams.toString()}`);
+        window.history.replaceState(null, "", `?${newParams.toString()}`);
       }}
       className="w-full"
     >

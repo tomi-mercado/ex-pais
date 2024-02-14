@@ -91,19 +91,19 @@ const InflationPastCalculator: React.FC<{
     if (value === "" || value === "0") {
       newParams.delete(`past-${name}`);
 
-      window.history.pushState(null, "", `?${newParams.toString()}`);
+      window.history.replaceState(null, "", `?${newParams.toString()}`);
       return;
     }
 
     const numberValue = Number(value);
     const isNumber = !isNaN(numberValue);
     if (!isNumber) {
-      window.history.pushState(null, "", `?${newParams.toString()}`);
+      window.history.replaceState(null, "", `?${newParams.toString()}`);
       return;
     }
 
     newParams.set(`past-${name}`, numberValue.toString());
-    window.history.pushState(null, "", `?${newParams.toString()}`);
+    window.history.replaceState(null, "", `?${newParams.toString()}`);
   };
 
   return (

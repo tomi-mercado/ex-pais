@@ -202,14 +202,14 @@ export const StadisticProvider: React.FC<StadisticProviderProps> = ({
     const newParams = new URLSearchParams(searchParams);
     newParams.set("from", value.toString());
 
-    window.history.pushState(null, "", `?${newParams.toString()}`);
+    window.history.replaceState(null, "", `?${newParams.toString()}`);
   };
 
   const setTo = (value: `${number}-${number}`) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("to", value.toString());
 
-    window.history.pushState(null, "", `?${newParams.toString()}`);
+    window.history.replaceState(null, "", `?${newParams.toString()}`);
   };
 
   const contextValue: StadisticContextData = {

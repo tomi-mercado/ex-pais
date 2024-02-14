@@ -62,7 +62,7 @@ const NavbarDrawer: React.FC<{
       newParams.delete("menu");
     }
 
-    window.history.pushState({}, "", `?${newParams.toString()}`);
+    window.history.replaceState({}, "", `?${newParams.toString()}`);
   };
 
   // Prevent drawer opening with url if is not mobile
@@ -80,13 +80,15 @@ const NavbarDrawer: React.FC<{
           <DrawerClose className="absolute top-4 right-4">
             <X />
           </DrawerClose>
-          <div className="p-6 flex flex-col">
+          <div className="p-6 flex flex-col gap-6">
             <Title as="p" />
-            {links.map((link) => (
-              <MobileNavbarLinkWrapper key={link.href}>
-                <NavbarLink href={link.href}>{link.text}</NavbarLink>
-              </MobileNavbarLinkWrapper>
-            ))}
+            <div className="flex flex-col">
+              {links.map((link) => (
+                <MobileNavbarLinkWrapper key={link.href}>
+                  <NavbarLink href={link.href}>{link.text}</NavbarLink>
+                </MobileNavbarLinkWrapper>
+              ))}
+            </div>
           </div>
         </DrawerContent>
       </DrawerTrigger>

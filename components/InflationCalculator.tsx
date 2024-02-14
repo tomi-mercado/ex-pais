@@ -7,7 +7,7 @@ import InflationPastCalculator from "./InflationPastCalculator";
 import Result from "./Result";
 import StadisticCalculator from "./StadisticCalculator";
 
-const calculateInflation = (
+export const calculateInflation = (
   inflationPerMonth: Record<string, number>,
   from: { month: number; year: number },
   to: { month: number; year: number }
