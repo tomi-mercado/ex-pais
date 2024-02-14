@@ -8,17 +8,22 @@ import Result from "./Result";
 import StadisticCalculator from "./StadisticCalculator";
 import { Input } from "./ui/input";
 
-const calculateAdquisitivePower = (
+const calculateSalaryVariation = (
   currentSalary: number,
-  pastSalary: number,
-  inflation: number
+  pastSalary: number
 ) => {
   if (pastSalary === 0) {
     return 0;
   }
 
+  return currentSalary / pastSalary;
+};
+
+const calculateAdquisitivePower = (
+  salaryVariation: number,
+  inflation: number
+) => {
   const inflationFactor = 1 + inflation / 100;
-  const salaryVariation = currentSalary / pastSalary;
   return (salaryVariation / inflationFactor - 1) * 100;
 };
 
@@ -93,6 +98,11 @@ const AdquisitivePowerCalculator: React.FC = () => {
     }
   );
 
+  const salaryVariation = calculateSalaryVariation(
+    currentSalary || 0,
+    pastSalary || 0
+  );
+
   return (
     <StadisticCalculator>
       <div className="grid grid-cols-2 gap-4 items-center">
@@ -118,10 +128,21 @@ const AdquisitivePowerCalculator: React.FC = () => {
         colorBasedOnFirstChar
         label="La variación del poder adquisitivo fue del:"
         result={`${calculateAdquisitivePower(
-          currentSalary || 0,
-          pastSalary || 0,
+          salaryVariation,
           inflation
         ).toFixed(2)}%`}
+        aclaration={`Mientras que el sueldo 
+        ${
+          salaryVariation > 1
+            ? "aumentó un "
+            : salaryVariation === 1
+            ? "se mantuvo igual"
+            : "se redujo un "
+        }${
+          salaryVariation !== 1
+            ? `${Math.abs((salaryVariation - 1) * 100).toFixed(2)}%`
+            : ""
+        }, la inflación fue de ${inflation.toFixed(2)}%`}
       />
     </StadisticCalculator>
   );

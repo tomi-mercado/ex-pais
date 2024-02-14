@@ -5,12 +5,14 @@ interface ResultProps {
   label: string;
   result: string;
   colorBasedOnFirstChar?: boolean;
+  aclaration?: string;
 }
 
 const Result: React.FC<ResultProps> = ({
   label,
   result,
   colorBasedOnFirstChar,
+  aclaration,
 }) => {
   return (
     <div className="flex flex-col gap-1 h-32 text-center items-center">
@@ -25,6 +27,7 @@ const Result: React.FC<ResultProps> = ({
       >
         <strong>{result}</strong>
       </p>
+      <p className="mt-2 text-sm text-muted-foreground">{aclaration}</p>
     </div>
   );
 };
