@@ -67,7 +67,7 @@ const InflationCalculator: React.FC = () => {
   return (
     <StadisticCalculator>
       <Result
-        label="La inflación acumulada entre fue de:"
+        label="La inflación acumulada fue de:"
         result={`${result.toFixed(2)}%`}
       />
       <InflationPastCalculator result={result} />
